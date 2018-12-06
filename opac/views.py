@@ -1,5 +1,5 @@
-from django.http import HttpResponse
+from django.views.generic.base import TemplateView
 
 
-def index(request):
-    return HttpResponse('this is opac index page')
+class SearchView(TemplateView):
+    template_name = 'opac/search.html'
