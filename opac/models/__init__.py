@@ -1,1 +1,1 @@
-from opac.models import masters, transactions
+from opac.models import masters, transactions  # noqa: F401

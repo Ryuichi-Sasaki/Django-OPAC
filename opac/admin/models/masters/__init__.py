@@ -4,4 +4,4 @@ import opac.admin.models.masters.library
 import opac.admin.models.masters.publisher
 import opac.admin.models.masters.stock
 import opac.admin.models.masters.translator
-import opac.admin.models.masters.user
+import opac.admin.models.masters.user  # noqa: F401

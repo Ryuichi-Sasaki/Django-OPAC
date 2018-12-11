@@ -1,1 +1,1 @@
-import opac.admin.models
+import opac.admin.models  # noqa: F401
