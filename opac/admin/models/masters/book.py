@@ -28,7 +28,7 @@ class BookAdmin(admin.ModelAdmin):
         'isbn'
     )
     list_display_links = ('get_book_number', 'name')
-    search_fields = ('name', 'publisher', 'isbn')
+    search_fields = ('name', 'publisher__name', 'isbn')
     raw_id_fields = ('publisher', )
     inlines = (AuthorsInline, TranslatorsInline)
 
