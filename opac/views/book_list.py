@@ -3,13 +3,8 @@ from django.db.models import Q
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.views.generic import ListView
-from django.views.generic.base import TemplateView
 
 from opac.models.masters import Book
-
-
-class SearchView(TemplateView):
-    template_name = 'opac/search.html'
 
 
 class BookListView(ListView):
