@@ -12,12 +12,12 @@ class SearchView(ListView):
     def render_search(self, request):
         return render(request, 'opac/search.html')
 
-    def search_words_not_found(self, request):
+    def render_no_search_words(self, request):
         messsage = '検索語を入力してください。'
         messages.error(request, messsage, extra_tags='danger')
         return self.render_search(request)
 
-    def books_not_found(self, request):
+    def render_no_books(self, request):
         messsage = '該当する書籍が見つかりませんでした。'
         messages.warning(request, messsage)
         return self.render_search(request)
@@ -26,7 +26,7 @@ class SearchView(ListView):
         if 'words' not in request.GET:
             return self.render_search(request)
         if request.GET['words'].split() == []:
-            return self.search_words_not_found(request)
+            return self.render_no_search_words(request)
         return super().dispatch(request, *args, **kwargs)
 
     def get_queryset(self):
@@ -35,5 +35,5 @@ class SearchView(ListView):
 
     def render_to_response(self, context, **response_kwargs):
         if not context['books']:
-            return self.books_not_found(self.request)
+            return self.render_no_books(self.request)
         return super().render_to_response(context, **response_kwargs)
