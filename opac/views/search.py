@@ -1,7 +1,5 @@
 from django.contrib import messages
-from django.http import HttpResponseRedirect
 from django.shortcuts import render
-from django.urls import reverse
 from django.views.generic import ListView
 
 from opac.models.masters import Book
@@ -14,12 +12,12 @@ class SearchView(ListView):
     def search_words_not_found(self, request):
         messsage = '検索語を入力してください。'
         messages.error(request, messsage, extra_tags='danger')
-        return HttpResponseRedirect(reverse('opac:search'))
+        return render(request, 'opac/search.html')
 
     def books_not_found(self, request):
         messsage = '該当する書籍が見つかりませんでした。'
         messages.warning(request, messsage)
-        return HttpResponseRedirect(reverse('opac:search'))
+        return render(request, 'opac/search.html')
 
     def dispatch(self, request, *args, **kwargs):
         if 'words' not in request.GET:
