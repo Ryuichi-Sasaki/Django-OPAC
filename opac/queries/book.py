@@ -19,3 +19,11 @@ class BookSearchQuery:
                 .distinct()
             queryset = queryset.union(books)
         return queryset.order_by('-publication_date')
+
+
+class BookQuery:
+    def __init__(self, book_id):
+        self._book_id = book_id
+
+    def query(self):
+        return Book.objects.get(pk=self._book_id)

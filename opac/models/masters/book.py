@@ -50,6 +50,3 @@ class Book(TimeStampedModel):
 
     def __str__(self):
         return self.name
-
-    def ordered_stocks(self):
-        return self.stocks.order_by('library__id')
