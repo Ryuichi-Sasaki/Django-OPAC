@@ -21,7 +21,7 @@ class Book(TimeStampedModel):
         on_delete=models.PROTECT
     )
     publication_date = models.DateField(
-        '出版日',
+        '発行日',
         blank=True,
         null=True
     )
