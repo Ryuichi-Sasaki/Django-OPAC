@@ -43,7 +43,7 @@
               {% endfor %}
             </td>
             <td>{{ book.publisher.name }}</td>
-            <td>{{ book.publication_date|default_if_none:'' }}</td>
+            <td>{{ book.issue_date|default_if_none:'' }}</td>
           </tr>
           {% endfor %}
         </tbody>
