@@ -4,7 +4,7 @@ from django.contrib import admin, messages
 from django.db import Error, transaction
 from django.utils import timezone
 
-from opac.admin.messages import AdminMessage
+from opac.admin.messages import AdminMessage, HoldingAdminMessage
 from opac.models.transactions import Holding, Lending
 
 
@@ -61,8 +61,7 @@ class HoldingAdmin(admin.ModelAdmin):
             self.message_user(
                 request, AdminMessage.ERROR_OCCURRED, level=messages.ERROR)
         else:
-            self.message_user(
-                request, '選択された 取置 を削除し、貸出 を登録しました。')
+            self.message_user(request, HoldingAdminMessage.LENT)
     lend.short_description = '選択された 取置 を貸出にする'
 
     def _create_lendings(self, holdings):
