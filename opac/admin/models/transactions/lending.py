@@ -71,7 +71,7 @@ class LendingAdmin(admin.ModelAdmin):
     def response_change(self, request, lending):
         if '_renew' in request.POST:
             self._renew(request, lending)
-            return HttpResponseRedirect('../../')  # チェンジリストへ
+            return HttpResponseRedirect('/admin/opac/lending')
         return super().response_change(request, lending)
 
     def _renew(self, request, lending):
