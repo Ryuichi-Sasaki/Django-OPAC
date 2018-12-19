@@ -1,12 +1,9 @@
-from datetime import timedelta
-
 from django.contrib import admin, messages
-from django.db import Error
 from django.utils import timezone
 
 from opac.admin.messages import AdminMessage, LendingAdminMessage
-from opac.models.transactions import Lending, Renewing
-from opac.services import LendingBackService, ServiceError
+from opac.models.transactions import Lending
+from opac.services import LendingBackService, LendingRenewService, ServiceError
 
 
 class LendingAdmin(admin.ModelAdmin):
@@ -76,8 +73,9 @@ class LendingAdmin(admin.ModelAdmin):
             return
 
         try:
-            self._create_renewings(lendings)
-        except Error:
+            for lending in lendings:
+                LendingRenewService(lending).exec()
+        except ServiceError:
             # TODO ログを仕込む
             self.message_user(
                 request, AdminMessage.ERROR_OCCURRED, level=messages.ERROR)
@@ -92,15 +90,6 @@ class LendingAdmin(admin.ModelAdmin):
         if any(l.stock.is_reserved() for l in lendings):
             reasons.append(LendingAdminMessage.RESERVATION_EXISTS)
         return reasons
-
-    def _create_renewings(self, lendings):
-        Renewing.objects.bulk_create(
-            Renewing(
-                lending=lending,
-                due_date=timezone.localdate() + timedelta(days=14)
-            )
-            for lending in lendings
-        )
 
     def back(self, request, lendings):
         try:
