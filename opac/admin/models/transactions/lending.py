@@ -1,11 +1,12 @@
 from datetime import timedelta
 
 from django.contrib import admin, messages
-from django.db import Error, transaction
+from django.db import Error
 from django.utils import timezone
 
 from opac.admin.messages import AdminMessage, LendingAdminMessage
-from opac.models.transactions import Holding, Lending, Renewing
+from opac.models.transactions import Lending, Renewing
+from opac.services import LendingBackService, ServiceError
 
 
 class LendingAdmin(admin.ModelAdmin):
@@ -102,37 +103,16 @@ class LendingAdmin(admin.ModelAdmin):
         )
 
     def back(self, request, lendings):
-        first_reservations = [
-            l.stock.reservations.order_by('created_at').first()
-            for l in lendings if l.stock.reservations.exists()
-        ]
         try:
-            with transaction.atomic():
-                self._create_holdings(first_reservations)
-                self._delete_instances(first_reservations)
-                lendings.delete()
-        except Error:
+            for lending in lendings:
+                LendingBackService(lending).exec()
+        except ServiceError:
             # TODO ログを仕込む
             self.message_user(
                 request, AdminMessage.ERROR_OCCURRED, level=messages.ERROR)
         else:
-            # TODO メールを送る
             self.message_user(request, LendingAdminMessage.BACKED)
     back.short_description = '選択された 貸出 を返却する'
-
-    def _create_holdings(self, reservations):
-        Holding.objects.bulk_create(
-            Holding(
-                stock=reservation.stock,
-                user=reservation.user,
-                expiration_date=timezone.localdate() + timedelta(days=14)
-            )
-            for reservation in reservations
-        )
-
-    def _delete_instances(self, instances):
-        for instance in instances:
-            instance.delete()
 
 
 admin.site.register(Lending, LendingAdmin)
