@@ -30,9 +30,11 @@ class HoldingCreatedMailer:
         try:
             send_mail(
                 '蔵書取り置きのご連絡 ○○○図書館',
-                f'''{self._name} さんが予約されていた {self._book} を取り置きしました。
-                取置期限は{self._expiration_date}です。
-                ''',
+                '{} さんが予約されていた {} を取り置きしました。\n取置期限は{}です。'.format(
+                    self._name,
+                    self._book,
+                    self._expiration_date
+                ),
                 'from@django-opac.com',
                 [self._email],
                 fail_silently=False,
